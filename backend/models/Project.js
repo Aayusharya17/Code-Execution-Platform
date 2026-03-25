@@ -4,11 +4,13 @@ const projectSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
+        trim: true,
     },
-    files:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'File',
-    }],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+    },
     createdAt:{
         type:Date,
         default:Date.now,
