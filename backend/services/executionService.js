@@ -40,11 +40,17 @@ class ExecutionService {
           command = `echo "${safeInput}" | docker run --rm -i -v "${filePath}:/app/code.c" gcc:11 sh -c "gcc /app/code.c -o /app/a.out && /app/a.out"`;
         }
 
-      exec(command, (error, stdout, stderr) => {
+        exec(command, { timeout: 10000 }, (error, stdout, stderr) => {
         try { fs.unlinkSync(filePath); } catch (_) {}
+            if (error && error.killed) {
+              return reject(new Error("Execution timed out (10 seconds)"));
+            }
 
-        if (error) return reject(new Error(stderr || error.message));
-        resolve(stdout);
+            if (error) {
+              return reject(new Error(stderr || error.message));
+            }
+
+            resolve(stdout);
       });
     });
   }
