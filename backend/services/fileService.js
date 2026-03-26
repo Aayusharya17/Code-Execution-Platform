@@ -5,7 +5,7 @@ class FileService {
     this.fileRepository = new FileRepository();
   }
 
-  async createFile({ name, content, projectId, userId }) {
+  async createFile({ name, content, projectId,language, userId }) {
     if (!name || !projectId) {
       const err = new Error('File name and projectId required');
       err.statusCode = 400;
@@ -16,7 +16,8 @@ class FileService {
       name,
       content,
       projectId,
-      userId
+      userId,
+      language
     );
   }
 

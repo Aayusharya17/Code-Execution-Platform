@@ -8,7 +8,8 @@ const runCode = async (req, res) => {
     const { fileId } = req.params;
 
     const input = req.body?.input ?? "";
-
+    console.log('Received input:', input);
+    console.log(userId,fileId);
     const result = await executionService.run(fileId, userId, input);
 
     return res.json({ success: true, output: result });

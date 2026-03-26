@@ -3,9 +3,10 @@ const Project = require('../models/Project');
 
 class FileRepository {
 
-  async createFile(name, content, projectId, userId) {
+  async createFile(name, content, projectId, userId,language) {
     try {
       const project = await Project.findById(projectId);
+      console.log(project);
 
       if (!project) {
         throw new Error('Project not found');
@@ -20,6 +21,7 @@ class FileRepository {
       const file = await File.create({
         name,
         content,
+        language,
         project: projectId
       });
 

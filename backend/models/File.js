@@ -11,6 +11,10 @@ const fileSchema = new mongoose.Schema({
         type:String,
         default:"",
     },
+    language:{
+        type:String,
+        enum:["python","javascript","java","cpp",'c','plaintext'],
+    },
     project:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Project',
