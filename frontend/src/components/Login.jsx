@@ -2,20 +2,38 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
+
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
   const handleLogin = async () => {
     setLoading(true);
     try {
+      if(!form.email || !form.password) {
+        setError("Please fill in all fields");
+        setLoading(false);
+        return;
+      }
+      if(!validateEmail(form.email)) {
+        setError("Please enter a valid email address");
+        setLoading(false);
+        return;
+      }
       const res = await API.post("/user/login", form);
       localStorage.setItem("token", res.data.data.token);
       navigate("/execute");
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -41,8 +59,9 @@ function Login() {
 
         {/* Heading */}
         <h1 className="text-2xl font-bold text-white tracking-tight mb-1">Welcome back</h1>
-        <p className="text-sm text-white/40 mb-8">Sign in to continue to your workspace</p>
+        <p className="text-sm text-white/40 mb-2">Sign in to continue to your workspace</p>
 
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         {/* Fields */}
         <div className="flex flex-col gap-5 mb-6">
           <div>
@@ -59,18 +78,36 @@ function Login() {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label className="block text-[11px] font-medium uppercase tracking-widest text-white/35 mb-2">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               autoComplete="current-password"
               className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/60 focus:bg-indigo-500/[0.06] focus:ring-2 focus:ring-indigo-500/10 transition-all"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               onKeyDown={handleKeyDown}
             />
+            <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-[38px] text-white/40 hover:text-white/70 transition cursor-pointer"
+        >
+          {!showPassword ? (
+            // Eye OFF (hide)
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M17.94 17.94A10.94 10.94 0 0112 19C7 19 2.73 15.11 1 12c.74-1.32 1.82-2.73 3.17-3.96M9.9 4.24A10.94 10.94 0 0112 5c5 0 9.27 3.89 11 7-.5.88-1.2 1.8-2.06 2.67M1 1l22 22" />
+            </svg>
+          ) : (
+            // Eye ON (show)
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          )}
+        </button>
           </div>
         </div>
 
