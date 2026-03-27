@@ -1,4 +1,3 @@
-// ExecutionService.js
 const { exec } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -7,13 +6,15 @@ const File = require("../models/File");
 class ExecutionService {
   async run(fileId, userId, input = "") {
     const file = await File.findById(fileId).populate("project");
-    console.log(file);
+    // console.log(file);
 
     if (!file) throw new Error("File not found");
 
     if (file.project.user.toString() !== userId) {
       throw new Error("Unauthorized");
     }
+    input = input.replaceAll(' ','\n');
+    // console.log(input);
 
     const code = file.content;
     const filePath = path.join(__dirname, `temp_${Date.now()}.${file.language}`);
@@ -39,11 +40,15 @@ class ExecutionService {
         else if (file.language === "c") {
           command = `echo "${safeInput}" | docker run --rm -i -v "${filePath}:/app/code.c" gcc:11 sh -c "gcc /app/code.c -o /app/a.out && /app/a.out"`;
         }
+        else {
+           try { fs.unlinkSync(filePath); } catch (_) {}
+          return reject(new Error("Unsupported language"));
+        }
 
-        exec(command, { timeout: 10000 }, (error, stdout, stderr) => {
+        exec(command, { timeout: 3000 }, (error, stdout, stderr) => {
         try { fs.unlinkSync(filePath); } catch (_) {}
             if (error && error.killed) {
-              return reject(new Error("Execution timed out (10 seconds)"));
+              return reject(new Error("Execution timed out (3 seconds)"));
             }
 
             if (error) {

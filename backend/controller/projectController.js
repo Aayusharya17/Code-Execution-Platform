@@ -8,7 +8,7 @@ const createProject = async (req, res) => {
     const { name } = req.body;
 
     const project = await projectService.createProject({ name, userId });
-    console.log('Project created:', project);
+    // console.log('Project created:', project);
     
     return res.status(201).json({
       data: project,

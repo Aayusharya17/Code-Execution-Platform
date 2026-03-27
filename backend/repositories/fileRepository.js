@@ -6,7 +6,7 @@ class FileRepository {
   async createFile(name, content, projectId, userId,language) {
     try {
       const project = await Project.findById(projectId);
-      console.log(project);
+      // console.log(project);
 
       if (!project) {
         throw new Error('Project not found');
