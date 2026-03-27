@@ -24,12 +24,11 @@ class ExecutionService {
       const safeInput = input.replace(/"/g, '\\"');
       let command = "";
 
-
-        if (file.language === "python") {
-          command = `echo "${safeInput}" | docker run --rm -i -v "${filePath}:/app/code.py" python:3.10 python /app/code.py`;
+        if (file.language === "py") {
+          command = `echo "${safeInput}" | docker run --rm -i -v "${filePath}:/app/code.py" mypython python /app/code.py`;
         }
 
-        else if (file.language === "javascript") {
+        else if (file.language === "js") {
           command = `echo "${safeInput}" | docker run --rm -i -v "${filePath}:/app/code.js" node:16 node /app/code.js`;
         }
 
@@ -45,10 +44,10 @@ class ExecutionService {
           return reject(new Error("Unsupported language"));
         }
 
-        exec(command, { timeout: 3000 }, (error, stdout, stderr) => {
+        exec(command, { timeout: 20000 }, (error, stdout, stderr) => {
         try { fs.unlinkSync(filePath); } catch (_) {}
             if (error && error.killed) {
-              return reject(new Error("Execution timed out (3 seconds)"));
+              return reject(new Error("Execution timed out (20 seconds)"));
             }
 
             if (error) {

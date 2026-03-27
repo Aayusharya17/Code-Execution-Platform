@@ -9,12 +9,7 @@ const createFile = async (req, res) => {
     const { name, content } = req.body;
      language = name.split('.').pop(0).toLowerCase(); 
 
-    if(language === 'js') language = 'javascript';
-    else if(language === 'py') language = 'python';
-    else if(language === 'java') language = 'java';
-    else if(language === 'cpp'  || language === 'c++') language = 'cpp';
-    else if(language === 'c') language = 'c';
-    else language = 'plaintext';
+     if(language === 'c++') language = 'cpp';
 
 
     const file = await fileService.createFile({

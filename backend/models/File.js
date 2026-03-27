@@ -13,7 +13,7 @@ const fileSchema = new mongoose.Schema({
     },
     language:{
         type:String,
-        enum:["python","javascript","java","cpp",'c','plaintext'],
+        enum:["py","js","java","cpp",'c','plaintext'],
     },
     project:{
         type:mongoose.Schema.Types.ObjectId,
