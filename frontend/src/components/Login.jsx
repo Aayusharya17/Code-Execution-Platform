@@ -46,7 +46,6 @@ function Login() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-4">
 
-      {/* Card */}
       <div className="w-full max-w-sm bg-white/[0.03] border border-white/[0.08] rounded-2xl px-8 py-10 shadow-2xl">
 
         {/* Icon
@@ -57,12 +56,10 @@ function Login() {
           </svg>
         </div> */}
 
-        {/* Heading */}
         <h1 className="text-2xl font-bold text-white tracking-tight mb-1">Welcome back</h1>
         <p className="text-sm text-white/40 mb-2">Sign in to continue to your workspace</p>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
-        {/* Fields */}
         <div className="flex flex-col gap-5 mb-6">
           <div>
             <label className="block text-[11px] font-medium uppercase tracking-widest text-white/35 mb-2">
@@ -96,12 +93,10 @@ function Login() {
           className="absolute right-3 top-[38px] text-white/40 hover:text-white/70 transition cursor-pointer"
         >
           {!showPassword ? (
-            // Eye OFF (hide)
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M17.94 17.94A10.94 10.94 0 0112 19C7 19 2.73 15.11 1 12c.74-1.32 1.82-2.73 3.17-3.96M9.9 4.24A10.94 10.94 0 0112 5c5 0 9.27 3.89 11 7-.5.88-1.2 1.8-2.06 2.67M1 1l22 22" />
             </svg>
           ) : (
-            // Eye ON (show)
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
               <circle cx="12" cy="12" r="3" />
@@ -111,7 +106,6 @@ function Login() {
           </div>
         </div>
 
-        {/* Button */}
         <button
           onClick={handleLogin}
           disabled={loading}
@@ -130,7 +124,6 @@ function Login() {
           )}
         </button>
 
-        {/* Footer */}
         <p className="text-center text-xs text-white/25 mt-6">
           Don't have an account?{" "}
           <a href="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
