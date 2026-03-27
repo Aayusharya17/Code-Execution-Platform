@@ -11,17 +11,32 @@ function Signup() {
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
   const handleSignup = async () => {
     setLoading(true);
     try {
+      if(!form.username || !form.email || !form.password) {
+        setError("All fields are required");
+        setLoading(false);
+        return;
+      }
+      if(!validateEmail(form.email)) {
+        setError("Please enter a valid email address");
+        setLoading(false);
+        return;
+      }
       const res = await API.post("/user/signup", form);
       localStorage.setItem("token", res.data.data.token);
       navigate("/execute");
     } catch (err) {
-      alert(err.response?.data?.message || "Signup failed");
+      setError(err.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
     }
@@ -51,6 +66,7 @@ function Signup() {
         {/* Fields */}
         <div className="flex flex-col gap-5 mb-6">
 
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           {/* Username */}
           <div>
             <label className="block text-[11px] font-medium uppercase tracking-widest text-white/35 mb-2">
@@ -73,7 +89,7 @@ function Signup() {
             <input
               type="email"
               placeholder="you@example.com"
-              autoComplete="email"
+              // autoComplete="email"
               className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-green-500/60 focus:bg-green-500/[0.06] focus:ring-2 focus:ring-green-500/10 transition-all"
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               onKeyDown={handleKeyDown}
@@ -99,9 +115,9 @@ function Signup() {
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-[38px] text-white/40 hover:text-white/70 transition"
+          className="absolute right-3 top-[38px] text-white/40 hover:text-white/70 transition cursor-pointer"
         >
-          {showPassword ? (
+          {!showPassword ? (
             // Eye OFF (hide)
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M17.94 17.94A10.94 10.94 0 0112 19C7 19 2.73 15.11 1 12c.74-1.32 1.82-2.73 3.17-3.96M9.9 4.24A10.94 10.94 0 0112 5c5 0 9.27 3.89 11 7-.5.88-1.2 1.8-2.06 2.67M1 1l22 22" />
@@ -120,7 +136,7 @@ function Signup() {
         <button
           onClick={handleSignup}
           disabled={loading}
-          className="w-full py-3 rounded-lg bg-green-600 hover:bg-green-500 active:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2"
+          className="w-full py-3 cursor-pointer rounded-lg bg-green-600 hover:bg-green-500 active:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
