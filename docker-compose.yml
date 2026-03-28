@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${PWD}/backend/temp:/app/temp   
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/code-executor
+    depends_on:
+      - mongo
+      - runner
+
+  mongo:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  runner:
+    build: ./runner
+    container_name: mypython
+    stdin_open: true
+    tty: true
+    # keep container alive (optional trick)
+    command: ["tail", "-f", "/dev/null"]
+
+volumes:
+  mongo-data:
