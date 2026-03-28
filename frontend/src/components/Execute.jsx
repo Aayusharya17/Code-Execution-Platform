@@ -130,8 +130,8 @@ export default function Execute() {
   const [open, setOpen] = useState(false);
 
   const token = localStorage.getItem("token");
-  const API = "http://localhost:5000/api/v1";
-
+  const API = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
+  
   const fetchProjects = async () => {
     try {
       const res = await axios.get(`${API}/user/projects`, { headers: { Authorization: `Bearer ${token}` } });
@@ -180,7 +180,7 @@ export default function Execute() {
     setActiveTab("OUTPUT");
     try {
       const res = await axios.post(`${API}/execute/${selectedFile}`, { input }, { headers: { Authorization: `Bearer ${token}` } });
-      console.log(res);
+      // console.log(res);
       setOutput(res.data.output);
     } catch (err) {
       setOutput(err.response?.data?.message || "Execution error");
